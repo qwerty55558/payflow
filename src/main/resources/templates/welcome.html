@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>장시윤 - 로그인</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script>
+        // 기존 앱과 동일한 테마 설정을 유지합니다.
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'app-bg': '#2c2c2e',        // body 배경색
+                        'container-bg': '#f2f2f7',  // 컨테이너 내부 배경색
+                        'account-card-bg': '#8bc34a', // 주조색 (로고, 버튼)
+                        'bank-logo-text': '#8bc34a',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-app-bg flex justify-center items-center min-h-screen p-4">
+
+<!-- 로그인 컨테이너 -->
+<div class="container bg-container-bg rounded-3xl shadow-xl w-full max-w-sm p-8 sm:p-10">
+
+    <!-- 로고 (F 트레이드마크) -->
+    <div class="mx-auto w-28 h-28 bg-account-card-bg rounded-full flex justify-center items-center mb-8 shadow-lg">
+        <span class="text-6xl font-bold text-white">F</span>
+    </div>
+
+    <!-- 환영 메시지 -->
+    <h2 class="text-2xl font-bold text-center text-gray-800 mb-8">환영합니다!</h2>
+
+    <!-- 로그인 폼 -->
+    <form>
+        <div class="space-y-4">
+            <!-- 아이디 입력 필드 -->
+            <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                        <i class="fas fa-user text-gray-400"></i>
+                    </span>
+                <input
+                        type="text"
+                        placeholder="아이디"
+                        class="w-full pl-10 pr-3 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-account-card-bg transition"
+                >
+            </div>
+
+            <!-- 비밀번호 입력 필드 -->
+            <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                        <i class="fas fa-lock text-gray-400"></i>
+                    </span>
+                <input
+                        type="password"
+                        placeholder="비밀번호"
+                        class="w-full pl-10 pr-3 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-account-card-bg transition"
+                >
+            </div>
+        </div>
+
+        <!-- 로그인 버튼 -->
+        <button
+                type="submit"
+                class="w-full bg-account-card-bg text-white font-bold py-3 px-4 rounded-lg mt-8 hover:opacity-90 transition-opacity duration-200 shadow-md"
+        >
+            로그인
+        </button>
+    </form>
+
+    <!-- 추가 옵션 -->
+    <div class="text-center mt-6">
+        <a href="#" class="text-sm text-gray-500 hover:underline">비밀번호 찾기</a>
+        <span class="text-gray-300 mx-2">|</span>
+        <a href="#" class="text-sm text-gray-500 hover:underline">회원가입</a>
+    </div>
+</div>
+
+</body>
+</html>
