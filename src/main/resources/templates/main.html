@@ -34,7 +34,7 @@
 
     <header class="flex justify-between items-center px-5 py-4 bg-container-bg border-b border-header-border z-10 flex-shrink-0">
         <div class="flex items-baseline">
-            <span class="text-2xl font-bold text-gray-800 mr-4">장시윤</span>
+            <span class="text-2xl font-bold text-gray-800 mr-4" th:text="${userId}"></span>
             <span class="text-base text-gray-600 px-2 py-1 rounded-md cursor-pointer font-bold">내 계좌</span>
         </div>
         <div class="flex items-center">
@@ -44,21 +44,28 @@
     </header>
 
     <main class="flex-grow p-5 overflow-y-auto">
-        <div class="account-card bg-account-card-bg rounded-xl p-4 mb-4 flex justify-between items-center text-white shadow-md">
-            <div class="flex items-center">
-                <div class="bank-logo w-10 h-10 bg-white rounded-full flex justify-center items-center text-lg font-bold text-bank-logo-text mr-4">F</div>
-                <div class="flex flex-col">
-                    <span class="text-sm font-medium mb-1 flex items-center">장시윤의 통장 <i class="fas fa-star text-yellow-300 text-xs ml-1"></i></span>
-                    <span class="text-lg font-bold">100,000,000원</span>
+        <th:block th:each="account : ${accounts}">
+            <div class="account-card bg-account-card-bg rounded-xl p-4 mb-4 flex justify-between items-center text-white shadow-md">
+                <div class="flex items-center">
+                    <div class="bank-logo w-10 h-10 bg-white rounded-full flex justify-center items-center text-lg font-bold text-bank-logo-text mr-4">F</div>
+                    <div class="flex flex-col">
+                        <div class="flex items-center mb-1">
+                            <span class="text-sm font-medium mb-1 flex items-center" th:text="${account.getAccountName()}"></span><span><i class="fas fa-star text-yellow-300 text-xs ml-1"></i></span>
+                        </div>
+                        <span class="text-lg font-bold"
+                              th:text="|${#numbers.formatInteger(account.balance, 0, 'COMMA')} \|">
+
+                        </span>
+                    </div>
                 </div>
+                <button class="transfer-btn bg-btn-translucent hover:bg-btn-translucent-hover border-none rounded-full px-4 py-2 text-sm text-white cursor-pointer transition">이체</button>
             </div>
-            <button class="transfer-btn bg-btn-translucent hover:bg-btn-translucent-hover border-none rounded-full px-4 py-2 text-sm text-white cursor-pointer transition">이체</button>
-        </div>
+        </th:block>
 
     </main>
 
     <nav class="bottom-nav flex justify-around items-center bg-container-bg border-t border-header-border py-2 w-full z-10 flex-shrink-0">
-        <a href="#" class="nav-item flex flex-col items-center text-inactive-nav-text text-xs p-1">
+        <a href="#" class="nav-item flex flex-col items-center text-active-nav-text text-xs p-1">
             <i class="fas fa-home text-xl mb-1"></i>
             <span>홈</span>
         </a>
@@ -70,7 +77,7 @@
             <i class="fas fa-shopping-bag text-xl mb-1"></i>
             <span>상품</span>
         </a>
-        <a href="#" class="nav-item flex flex-col items-center text-active-nav-text text-xs p-1 font-bold">
+        <a href="#" class="nav-item flex flex-col items-center text-inactive-nav-text text-xs p-1">
             <i class="fas fa-ellipsis-h text-xl mb-1"></i>
             <span>더 보기</span>
         </a>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>장시윤 - 로그인</title>
+    <title>PayFlow</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script>
@@ -36,7 +36,7 @@
     <h2 class="text-2xl font-bold text-center text-gray-800 mb-8">환영합니다!</h2>
 
     <!-- 로그인 폼 -->
-    <form>
+    <form method="POST" th:action="@{/login}" th:object="${loginFormDto}">
         <div class="space-y-4">
             <!-- 아이디 입력 필드 -->
             <div class="relative">
@@ -44,11 +44,17 @@
                         <i class="fas fa-user text-gray-400"></i>
                     </span>
                 <input
+                        th:field="*{userId}"
                         type="text"
                         placeholder="아이디"
                         class="w-full pl-10 pr-3 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-account-card-bg transition"
+                        th:classappend="${#fields.hasErrors('userId')} ? 'border-red-300 focus:border-red-300 focus:ring-red-300' : 'border-gray-300 focus:border-blue-300 focus:ring-blue-300'"
                 >
             </div>
+            <div th:if="${#fields.hasErrors('userId')}"
+                 th:errors="*{userId}"
+                 class="mt-1 text-sm text-red-300"
+            ></div>
 
             <!-- 비밀번호 입력 필드 -->
             <div class="relative">
@@ -56,11 +62,17 @@
                         <i class="fas fa-lock text-gray-400"></i>
                     </span>
                 <input
+                        th:field="*{password}"
                         type="password"
                         placeholder="비밀번호"
                         class="w-full pl-10 pr-3 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-account-card-bg transition"
+                        th:classappend="${#fields.hasErrors('password')} ? 'border-red-300 focus:border-red-300 focus:ring-red-300' : 'border-gray-300 focus:border-blue-300 focus:ring-blue-300'"
                 >
             </div>
+            <div th:if="${#fields.hasErrors('password')}"
+                 th:errors="*{password}"
+                 class="mt-1 text-sm text-red-300"
+            ></div>
         </div>
 
         <!-- 로그인 버튼 -->

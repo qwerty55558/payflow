@@ -1,6 +1,8 @@
 package com.fds.payflow.config;
 
 import com.fds.payflow.interceptor.LoginCheckInterceptor;
+import com.fds.payflow.utils.SimpleEncoder;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -15,6 +17,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludePathPatterns(
                         "/",
                         "/logout",
+                        "/login",
                         "/members/add",
                         "/css/**",
                         "/*.ico",

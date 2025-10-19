@@ -29,10 +29,16 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-web")
-	compileOnly("org.projectlombok:lombok")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
+
+    // pwd hashing library - Bouncy Castle
+    implementation("org.bouncycastle:bcprov-jdk18on:1.82")
+
 	runtimeOnly("com.h2database:h2")
+
 	annotationProcessor("org.projectlombok:lombok")
+    compileOnly("org.projectlombok:lombok")
+
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
