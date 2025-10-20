@@ -32,35 +32,39 @@ class AuthControllerTest {
     void testLoginReq() throws Exception {
         // given
         LoginFormDto loginFormDto = new LoginFormDto();
-        loginFormDto.setUsername("qwerty");
+        loginFormDto.setUserId("qwerty");
         loginFormDto.setPassword("qwerty123$");
         // when
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders.post("/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(loginFormDto))
+                .param("userId", loginFormDto.getUserId())
+                .param("password", loginFormDto.getPassword())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
         );
         // then
         result
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
-                .andExpect(MockMvcResultMatchers.view().name("main"));
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.view().name("redirect:/main"));
     }
+
     @DisplayName("POST /login 요청 테스트 - fail")
     @Test
     void testLoginReq2() throws Exception {
         // given
         LoginFormDto loginFormDto = new LoginFormDto();
-        loginFormDto.setUsername(""); // 빈 아이디
+        loginFormDto.setUserId(""); // 빈 아이디
         loginFormDto.setPassword(""); // 빈 비밀번호
         // when
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders.post("/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(loginFormDto))
+                .param("userId", loginFormDto.getUserId())
+                .param("password", loginFormDto.getPassword())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
         );
         // then
         result
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().is4xxClientError());
+                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
+                .andExpect(MockMvcResultMatchers.view().name("/welcome"));
     }
 
 }
