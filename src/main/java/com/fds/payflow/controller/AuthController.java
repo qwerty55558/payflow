@@ -23,7 +23,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public String loginReq(@Valid LoginFormDto loginFormDto, BindingResult br, HttpSession session, Model model){
+    public String loginReq(@Valid LoginFormDto loginFormDto, BindingResult br, HttpSession session){
         if (br.hasErrors()) {
             log.warn("Login Validation error = {}", br);
             return "/welcome";
@@ -32,8 +32,8 @@ public class AuthController {
         Member member = authService.createMember(loginFormDto.getUserId(), loginFormDto.getPassword());
 
         if (member == null) {
-            br.reject(("loginFail"), "Invalid user ID or password.");
-            log.warn("Login filed : ID or PW mismatch");
+            br.reject(("loginFail"), "존재하지 않는 ID 이거나 비밀번호가 틀립니다.");
+            log.warn("Login failed : ID or PW mismatch");
             return "/welcome";
         }
         session.setAttribute(SessionConst.LOGIN_MEMBER_NAME.name(), member.getUserId());

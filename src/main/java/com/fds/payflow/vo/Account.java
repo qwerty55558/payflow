@@ -26,4 +26,12 @@ public class Account {
         this.balance = balance;
         this.member = member;
     }
+
+    public void withdraw(Long amount) {
+        this.balance -= amount;
+    }
+
+    public void deposit(Long amount) {
+        this.balance += amount;
+    }
 }

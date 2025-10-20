@@ -12,4 +12,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     @Query("SELECT a FROM Account a WHERE a.member.userId = :memberUserId")
     List<Account> findAccountsByMemberUserId(String memberUserId);
+
+    @Query("SELECT a FROM Account a WHERE a.accountNumber = :accountNumber")
+    Account findAccountByAccountNumber(String accountNumber);
 }
