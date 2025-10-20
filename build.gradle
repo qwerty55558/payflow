@@ -34,6 +34,9 @@ dependencies {
     // pwd hashing library - Bouncy Castle
     implementation 'org.bouncycastle:bcprov-jdk18on:1.82'
 
+    // thymeleaf layout dialect
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.4.0'
+
     runtimeOnly 'com.h2database:h2'
 
     annotationProcessor 'org.projectlombok:lombok'

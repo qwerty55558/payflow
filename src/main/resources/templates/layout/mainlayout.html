@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+
+    <title layout:fragment="title">My Default Title</title>
+
+    <th:block layout:fragment="styles"></th:block>
+</head>
+<body class="bg-app-bg flex justify-center items-center min-h-screen">
+    <div class="container bg-container-bg overflow-hidden
+                    flex flex-col w-full h-screen max-w-sm
+                    sm:max-w-md md:max-w-lg lg:max-w-xl
+                    sm:h-[90vh] sm:rounded-3xl sm:shadow-xl"
+    >
+        <th:block layout:fragment="header"></th:block>
+
+        <main class="flex-grow p-5 overflow-y-auto">
+            <th:block layout:fragment="content"></th:block>
+        </main>
+
+        <th:block layout:fragment="footer"></th:block>
+
+    </div>
+</body>
+</html>

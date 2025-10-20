@@ -1,88 +1,59 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/mainlayout}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Main</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'app-bg': '#2c2c2e',        // body 배경색
-                        'container-bg': '#f2f2f7',  // 컨테이너 내부 배경색
-                        'account-card-bg': '#8bc34a', // 계좌 카드 배경색
-                        'bank-logo-text': '#8bc34a', // 은행 로고 글자색
-                        'btn-translucent': 'rgba(255, 255, 255, 0.3)', // 이체 버튼 배경색
-                        'btn-translucent-hover': 'rgba(255, 255, 255, 0.5)', // 이체 버튼 호버 배경색
-                        'header-border': '#e0e0e0', // 헤더 및 하단 nav 경계선
-                        'active-nav-text': '#333', // 활성화된 nav item 텍스트색
-                        'inactive-nav-text': '#999', // 비활성화된 nav item 텍스트색
+    <title layout:fragment="title">Main</title>
+    <th:block layout:fragment="styles">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            'app-bg': '#2c2c2e',        // body 배경색
+                            'container-bg': '#f2f2f7',  // 컨테이너 내부 배경색
+                            'account-card-bg': '#8bc34a', // 계좌 카드 배경색
+                            'bank-logo-text': '#8bc34a', // 은행 로고 글자색
+                            'btn-translucent': 'rgba(255, 255, 255, 0.3)', // 이체 버튼 배경색
+                            'btn-translucent-hover': 'rgba(255, 255, 255, 0.5)', // 이체 버튼 호버 배경색
+                            'header-border': '#e0e0e0', // 헤더 및 하단 nav 경계선
+                            'active-nav-text': '#333', // 활성화된 nav item 텍스트색
+                            'inactive-nav-text': '#999', // 비활성화된 nav item 텍스트색
+                        }
                     }
                 }
             }
-        }
-    </script>
+        </script>
+    </th:block>
 </head>
-<body class="bg-app-bg flex justify-center items-center min-h-screen">
-<div class="container bg-container-bg overflow-hidden
-                flex flex-col w-full h-screen max-w-sm
-                sm:max-w-md md:max-w-lg lg:max-w-xl
-                sm:h-[90vh] sm:rounded-3xl sm:shadow-xl">
+    <th:block layout:fragment="header" th:replace="~{common/header::header}"></th:block>
 
-    <header class="flex justify-between items-center px-5 py-4 bg-container-bg border-b border-header-border z-10 flex-shrink-0">
-        <div class="flex items-baseline">
-            <span class="text-2xl font-bold text-gray-800 mr-4" th:text="${userId}"></span>
-            <span class="text-base text-gray-600 px-2 py-1 rounded-md cursor-pointer font-bold">내 계좌</span>
-        </div>
-        <div class="flex items-center">
-            <i class="fas fa-user-circle text-xl text-gray-600 ml-4 cursor-pointer"></i>
-            <i class="fas fa-bell text-xl text-gray-600 ml-4 cursor-pointer"></i>
-        </div>
-    </header>
+    <th:block layout:fragment="content">
+        <div th:each="account : ${accounts}"
+             class="account-card bg-account-card-bg rounded-xl p-4 mb-4 flex justify-between items-center text-white shadow-md">
 
-    <main class="flex-grow p-5 overflow-y-auto">
-        <th:block th:each="account : ${accounts}">
-            <div class="account-card bg-account-card-bg rounded-xl p-4 mb-4 flex justify-between items-center text-white shadow-md">
-                <div class="flex items-center">
-                    <div class="bank-logo w-10 h-10 bg-white rounded-full flex justify-center items-center text-lg font-bold text-bank-logo-text mr-4">F</div>
-                    <div class="flex flex-col">
-                        <div class="flex items-center mb-1">
-                            <span class="text-sm font-medium mb-1 flex items-center" th:text="${account.getAccountName()}"></span><span><i class="fas fa-star text-yellow-300 text-xs ml-1"></i></span>
-                        </div>
-                        <span class="text-lg font-bold"
-                              th:text="|${#numbers.formatInteger(account.balance, 0, 'COMMA')} \|">
-
-                        </span>
+            <div class="flex items-center">
+                <div class="bank-logo w-10 h-10 bg-white rounded-full flex justify-center items-center text-lg font-bold text-bank-logo-text mr-4">F</div>
+                <div class="flex flex-col">
+                    <div class="flex items-center mb-1">
+                        <span class="text-sm font-medium mb-1 flex items-center" th:text="${account.getAccountName()}"></span><span><i class="fas fa-star text-yellow-300 text-xs ml-1"></i></span>
                     </div>
+                    <span class="text-lg font-bold"
+                          th:text="|${#numbers.formatInteger(account.balance, 0, 'COMMA')}원|">
+                          </span>
                 </div>
-                <button class="transfer-btn bg-btn-translucent hover:bg-btn-translucent-hover border-none rounded-full px-4 py-2 text-sm text-white cursor-pointer transition">이체</button>
             </div>
-        </th:block>
+            <button class="transfer-btn bg-btn-translucent hover:bg-btn-translucent-hover border-none rounded-full px-4 py-2 text-sm text-white cursor-pointer transition">이체</button>
+        </div>
+    </th:block>
 
-    </main>
+    <th:block layout:fragment="footer" th:replace="~{common/footer::footer}"></th:block>
 
-    <nav class="bottom-nav flex justify-around items-center bg-container-bg border-t border-header-border py-2 w-full z-10 flex-shrink-0">
-        <a href="#" class="nav-item flex flex-col items-center text-active-nav-text text-xs p-1">
-            <i class="fas fa-home text-xl mb-1"></i>
-            <span>홈</span>
-        </a>
-        <a href="#" class="nav-item flex flex-col items-center text-inactive-nav-text text-xs p-1">
-            <i class="fas fa-file-alt text-xl mb-1"></i>
-            <span>피드</span>
-        </a>
-        <a href="#" class="nav-item flex flex-col items-center text-inactive-nav-text text-xs p-1">
-            <i class="fas fa-shopping-bag text-xl mb-1"></i>
-            <span>상품</span>
-        </a>
-        <a href="#" class="nav-item flex flex-col items-center text-inactive-nav-text text-xs p-1">
-            <i class="fas fa-ellipsis-h text-xl mb-1"></i>
-            <span>더 보기</span>
-        </a>
-    </nav>
-</div>
-</body>
+
 </html>
 
