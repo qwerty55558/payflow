@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,7 +20,11 @@ public class Member {
     private Long id;
 
     private String userId;
+
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    private Membership membership;
 
     @OneToMany(mappedBy = "member")
     private List<Account> accounts;
@@ -27,6 +32,7 @@ public class Member {
     public static class Builder{
         String userId;
         String password;
+        private Membership membership = Membership.BASIC;
 
         public Builder userId(String userId){
             this.userId = userId;
@@ -38,6 +44,11 @@ public class Member {
             return this;
         }
 
+        public Builder membership(Membership membership) {
+            this.membership = membership;
+            return this;
+        }
+
         public Member build(){
             return new Member(this);
         }
@@ -46,6 +57,7 @@ public class Member {
     private Member(Builder builder){
         this.userId = builder.userId;
         this.password = builder.password;
+        this.membership = builder.membership;
     }
 
     public void setAccounts(Account... paramAccounts) {
