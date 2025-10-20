@@ -1,4 +1,7 @@
 package com.fds.payflow.vo;
 
-public class Membership {
+public enum Membership {
+    BASIC,
+    PREMIUM,
+    ELITE
 }
