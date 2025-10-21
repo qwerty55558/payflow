@@ -26,7 +26,7 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Membership membership;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)
     private List<Account> accounts;
 
     public static class Builder{

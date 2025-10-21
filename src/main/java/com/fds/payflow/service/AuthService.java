@@ -9,6 +9,7 @@ import com.fds.payflow.vo.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
@@ -19,6 +20,7 @@ public class AuthService {
     private final AccountFactory accountFactory;
     private final AccountRepository accountRepository;
 
+    @Transactional
     public Member createMember(String userId, String password){
         if (!memberRepository.existsByUserId(userId)) {
 
@@ -26,11 +28,9 @@ public class AuthService {
                     .userId(userId)
                     .password(SimpleEncoder.encode(password))
                     .build();
-            memberRepository.save(build);
 
             Account account = accountFactory.createAccount(build);
             build.setAccounts(account);
-            accountRepository.save(account);
 
             return memberRepository.save(build);
         }else {
