@@ -1,5 +1,6 @@
 package com.fds.payflow.controller;
 
+import com.fds.payflow.constants.PageType;
 import com.fds.payflow.constants.SessionConst;
 import com.fds.payflow.dto.LoginFormDto;
 import com.fds.payflow.service.AccountService;
@@ -31,6 +32,8 @@ public class HomeController {
         String userId = session.getAttribute(SessionConst.LOGIN_MEMBER_NAME.name()).toString();
         model.addAttribute("accounts", accountService.findAddressesByMemberUserId(userId));
         model.addAttribute("userId", userId);
-        return "main";
+        model.addAttribute("pageTitle", "내 계좌");
+        model.addAttribute("pageType", PageType.MAIN.name());
+        return "mainpage";
     }
 }

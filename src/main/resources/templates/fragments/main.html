@@ -1,0 +1,19 @@
+<th:block th:fragment="main">
+    <div th:each="account : ${accounts}"
+         class="account-card bg-account-card-bg rounded-xl p-4 mb-4 flex justify-between items-center text-white shadow-md">
+
+        <div class="flex items-center">
+            <div class="bank-logo w-10 h-10 bg-white rounded-full flex justify-center items-center text-lg font-bold text-bank-logo-text mr-4">F</div>
+            <div class="flex flex-col">
+                <div class="flex items-center mb-1">
+                    <span class="font-bold flex items-center" th:text="${account.getAccountName()}"></span><span><i class="fas fa-star text-yellow-300 text-xs ml-1"></i></span>
+                </div>
+                <p th:text="|계좌번호 - ${account.getAccountNumber()}|" class="text-sm fond-medium inactive-nav-text"></p>
+                <span class="text-lg font-bold"
+                      th:text="|${#numbers.formatInteger(account.balance, 0, 'COMMA')}원|">
+                          </span>
+            </div>
+        </div>
+        <button class="transfer-btn bg-btn-translucent hover:bg-btn-translucent-hover border-none rounded-full px-4 py-2 text-sm text-white cursor-pointer transition">이체</button>
+    </div>
+</th:block>

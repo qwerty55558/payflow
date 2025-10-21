@@ -1,18 +1,26 @@
-<nav th:fragment="footer" class="bottom-nav flex justify-around items-center bg-container-bg border-t border-header-border py-2 w-full z-10 flex-shrink-0">
-    <a href="#" class="nav-item flex flex-col items-center text-active-nav-text text-xs p-1">
+<nav th:fragment="footer(type)" class="bottom-nav flex justify-around items-center bg-container-bg border-t border-header-border py-2 w-full z-10 flex-shrink-0">
+    <div th:data-url="@{api/fragments/main}" class="nav-item flex flex-col items-center text-xs p-1"
+       th:classappend="${#strings.equals(type, 'MAIN')} ? ' text-active-nav-text' : ' text-inactive-nav-text ajax-link cursor-pointer'"
+    >
         <i class="fas fa-home text-xl mb-1"></i>
         <span>홈</span>
-    </a>
-    <a href="#" class="nav-item flex flex-col items-center text-inactive-nav-text text-xs p-1">
+    </div>
+    <div th:data-url="@{api/fragments/feed}" class="nav-item flex flex-col items-center text-xs p-1"
+       th:classappend="${#strings.equals(type, 'FEED')} ? ' text-active-nav-text' : ' text-inactive-nav-text ajax-link cursor-pointer'"
+    >
         <i class="fas fa-file-alt text-xl mb-1"></i>
         <span>피드</span>
-    </a>
-    <a href="#" class="nav-item flex flex-col items-center text-inactive-nav-text text-xs p-1">
+    </div>
+    <div th:data-url="@{api/fragments/product}" class="nav-item flex flex-col items-center text-xs p-1"
+       th:classappend="${#strings.equals(type, 'PRODUCT')} ? ' text-active-nav-text' : ' text-inactive-nav-text ajax-link cursor-pointer'"
+    >
         <i class="fas fa-shopping-bag text-xl mb-1"></i>
         <span>상품</span>
-    </a>
-    <a href="#" class="nav-item flex flex-col items-center text-inactive-nav-text text-xs p-1">
+    </div>
+    <div th:data-url="@{api/fragments/more}" class="nav-item flex flex-col items-center text-xs p-1"
+       th:classappend="${#strings.equals(type, 'MORE')} ? ' text-active-nav-text' : ' text-inactive-nav-text ajax-link cursor-pointer'"
+    >
         <i class="fas fa-ellipsis-h text-xl mb-1"></i>
         <span>더 보기</span>
-    </a>
+    </div>
 </nav>

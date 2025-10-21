@@ -1,10 +1,10 @@
-<header th:fragment="header" class="flex justify-between items-center px-5 py-4 bg-container-bg border-b border-header-border z-10 flex-shrink-0">
+<header th:fragment="header(addtionalText, type)" class="flex justify-between items-center px-5 py-4 bg-container-bg border-b border-header-border z-10 flex-shrink-0">
     <div class="flex items-baseline">
         <span class="text-2xl font-bold text-gray-800 mr-4" th:text="${userId}"></span>
-        <span class="text-base text-gray-600 px-2 py-1 rounded-md cursor-pointer font-bold">내 계좌</span>
+        <span th:if="${#strings.equals(type, 'MAIN')}" class="text-base text-gray-600 px-2 py-1 rounded-md font-bold" th:text="${addtionalText}"></span>
     </div>
     <div class="flex items-center">
-        <i class="fas fa-user-circle text-xl text-gray-600 ml-4 cursor-pointer"></i>
-        <i class="fas fa-bell text-xl text-gray-600 ml-4 cursor-pointer"></i>
+        <i th:if="${#strings.equals(type, 'MAIN')}" class="fas fa-user-circle text-xl text-gray-600 ml-4"></i>
+        <i th:if="${#strings.equals(type, 'MAIN')}" class="fas fa-bell text-xl text-gray-600 ml-4"></i>
     </div>
 </header>

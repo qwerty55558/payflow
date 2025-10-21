@@ -15,14 +15,72 @@
                     sm:max-w-md md:max-w-lg lg:max-w-xl
                     sm:h-[90vh] sm:rounded-3xl sm:shadow-xl"
     >
-        <th:block layout:fragment="header"></th:block>
 
-        <main class="flex-grow p-5 overflow-y-auto">
+        <div id="header-container">
+            <th:block layout:fragment="header"></th:block>
+        </div>
+
+        <main id="content-container" class="flex-grow p-5 overflow-y-auto">
             <th:block layout:fragment="content"></th:block>
         </main>
 
-        <th:block layout:fragment="footer"></th:block>
+        <div id="footer-container">
+            <th:block layout:fragment="footer"></th:block>
+        </div>
 
     </div>
 </body>
+<script th:inline="javascript">
+    // [수정된 코드]
+    // <script> 태그 안에 이것만 남겨두세요.
+
+    async function handleLinkClick(e) {
+        // 클릭된 요소(e.currentTarget)에서 'data-url'을 가져옵니다.
+        const url = this.dataset.url;
+        console.log("Clicked URL:", url);
+
+        if (!url) {
+            return;
+        }
+
+        // <span>이나 <div>는 기본 동작이 없지만,
+        // 만일을 위해 preventDefault를 호출할 수 있습니다. (필수는 아님)
+        // e.preventDefault();
+
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const fragments = await response.json();
+            document.getElementById('header-container').innerHTML = fragments.header;
+            document.getElementById('content-container').innerHTML = fragments.content;
+            document.getElementById('footer-container').innerHTML = fragments.footer;
+        } catch (error) {
+            console.error('Fetch error:', error);
+        }
+    }
+
+    // DOM이 로드된 후, 'body'에 이벤트 리스너를 위임합니다.
+    document.addEventListener("DOMContentLoaded", () => {
+
+        // body 전체에 클릭 이벤트를 '한 번만' 등록
+        document.body.addEventListener('click', function(e) {
+
+            // 클릭된 지점(e.target)에서 가장 가까운 '.ajax-link' 조상을 찾습니다.
+            const clickedLink = e.target.closest('.ajax-link');
+
+            // '.ajax-link'가 아니면(null) 무시합니다.
+            if (!clickedLink) {
+                return;
+            }
+
+            // '.ajax-link'가 맞다면, handleLinkClick 함수를
+            // 'clickedLink'를 this(e.currentTarget)로 하여 호출합니다.
+            handleLinkClick.call(clickedLink, e);
+        });
+
+        console.log("AJAX listener (Event Delegation) is ready.");
+    });
+</script>
 </html>

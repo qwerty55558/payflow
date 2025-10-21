@@ -31,29 +31,23 @@
         </script>
     </th:block>
 </head>
-    <th:block layout:fragment="header" th:replace="~{common/header::header}"></th:block>
-
-    <th:block layout:fragment="content">
-        <div th:each="account : ${accounts}"
-             class="account-card bg-account-card-bg rounded-xl p-4 mb-4 flex justify-between items-center text-white shadow-md">
-
-            <div class="flex items-center">
-                <div class="bank-logo w-10 h-10 bg-white rounded-full flex justify-center items-center text-lg font-bold text-bank-logo-text mr-4">F</div>
-                <div class="flex flex-col">
-                    <div class="flex items-center mb-1">
-                        <span class="text-sm font-medium mb-1 flex items-center" th:text="${account.getAccountName()}"></span><span><i class="fas fa-star text-yellow-300 text-xs ml-1"></i></span>
-                    </div>
-                    <span class="text-lg font-bold"
-                          th:text="|${#numbers.formatInteger(account.balance, 0, 'COMMA')}원|">
-                          </span>
-                </div>
-            </div>
-            <button class="transfer-btn bg-btn-translucent hover:bg-btn-translucent-hover border-none rounded-full px-4 py-2 text-sm text-white cursor-pointer transition">이체</button>
-        </div>
+    <th:block
+            layout:fragment="header"
+            th:replace="~{common/header::header(${pageTitle}, ${pageType})}"
+    >
     </th:block>
 
-    <th:block layout:fragment="footer" th:replace="~{common/footer::footer}"></th:block>
+    <th:block
+            layout:fragment="content"
+            th:replace="~{fragments/main::main}"
+    >
+    </th:block>
 
+    <th:block
+            layout:fragment="footer"
+            th:replace="~{common/footer::footer(${pageType})}"
+    >
+    </th:block>
 
 </html>
 
