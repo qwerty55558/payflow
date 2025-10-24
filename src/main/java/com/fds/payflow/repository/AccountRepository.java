@@ -1,8 +1,10 @@
 package com.fds.payflow.repository;
 
 import com.fds.payflow.vo.Account;
+import com.fds.payflow.vo.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,4 +17,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     @Query("SELECT a FROM Account a WHERE a.accountNumber = :accountNumber")
     Account findAccountByAccountNumber(String accountNumber);
+
+    @Query("SELECT a.member FROM Account a WHERE a.accountNumber = :accountNumber")
+    Member findMemberByAccountNumber(@Param("accountNumber") String accountNumber);
 }

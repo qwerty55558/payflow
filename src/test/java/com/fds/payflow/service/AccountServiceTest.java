@@ -1,6 +1,7 @@
 package com.fds.payflow.service;
 
 import com.fds.payflow.vo.Account;
+import com.fds.payflow.vo.Feed;
 import com.fds.payflow.vo.Member;
 import com.fds.payflow.vo.Transfer;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,6 +25,9 @@ class AccountServiceTest {
     @Autowired
     MemberService memberService;
 
+    @Autowired
+    FeedService feedService;
+
     @DisplayName("계좌 이체 테스트 - success")
     @Test
     void transferTest(){
@@ -34,6 +40,17 @@ class AccountServiceTest {
     void transferFailTest(){
         Transfer transfer = transferTestTemplate(100001L);
         assertNull(transfer);
+    }
+
+    @DisplayName("피드 생성 테스트 - success")
+    @Test
+    void transferWithFeedCreate(){
+        transferTestTemplate(10000L);
+        List<Feed> allFeed = feedService.getAllFeed();
+        assertNotNull(allFeed);
+        for (Feed feed : allFeed) {
+            log.info("feed = {}", feed.toString());
+        }
     }
 
     private Transfer transferTestTemplate(Long amount){
