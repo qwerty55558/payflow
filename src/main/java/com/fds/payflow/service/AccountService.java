@@ -1,5 +1,7 @@
 package com.fds.payflow.service;
 
+import com.fds.payflow.exceptions.NullAccountException;
+import com.fds.payflow.exceptions.OutOfBalanceException;
 import com.fds.payflow.repository.AccountRepository;
 import com.fds.payflow.repository.TransferRepository;
 import com.fds.payflow.vo.Account;
@@ -21,16 +23,19 @@ public class AccountService {
     }
 
     @Transactional
-    public Transfer transferFromAccount(String fromAccountNum, String toAccountNum, Long amount) {
+    public Transfer transferFromAccount(String fromAccountNum, String toAccountNum, Long amount) throws OutOfBalanceException, NullAccountException {
         Account fromAccount = accountRepository.findAccountByAccountNumber(fromAccountNum);
 
         if (fromAccount.getBalance() < amount) {
-            return null;
+            throw new OutOfBalanceException("잔액이 부족합니다.");
         }
 
         fromAccount.withdraw(amount);
 
         Account toAccount = accountRepository.findAccountByAccountNumber(toAccountNum);
+        if (toAccount == null) {
+            throw new NullAccountException("존재하지 않는 계좌입니다");
+        }
         toAccount.deposit(amount);
 
         accountRepository.save(fromAccount);

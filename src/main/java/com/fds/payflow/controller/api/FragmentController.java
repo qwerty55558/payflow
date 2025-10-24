@@ -3,6 +3,7 @@ package com.fds.payflow.controller.api;
 
 import com.fds.payflow.constants.PageType;
 import com.fds.payflow.constants.SessionConst;
+import com.fds.payflow.dto.TransferRequestDto;
 import com.fds.payflow.service.AccountService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -44,6 +45,7 @@ public class FragmentController {
         model.addAttribute("additionalText", PageType.MAIN.name());
         model.addAttribute("type", PageType.MAIN.name());
         model.addAttribute("userId", userId);
+        model.addAttribute("transferRequestDto", new TransferRequestDto());
         return getFragments(model, "fragments/main", "main");
     }
 

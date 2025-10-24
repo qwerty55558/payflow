@@ -21,6 +21,10 @@
         </div>
 
         <main id="content-container" class="flex-grow p-5 overflow-y-auto">
+            <div id="error-messages"
+                 th:if="${globalErrors != null && !#lists.isEmpty(globalErrors)}">
+                <div class="text-center text-lg font-bold my-3" th:each="err : ${globalErrors}" th:text="${err.defaultMessage}"></div>
+            </div>
             <th:block layout:fragment="content"></th:block>
         </main>
 
@@ -28,24 +32,85 @@
             <th:block layout:fragment="footer"></th:block>
         </div>
 
+        <div id="dialog-container" class="fixed inset-0 z-50 overflow-y-auto hidden">
+            <div id="dialog-backdrop" class="fixed inset-0 bg-app-bg/50"></div>
+            <div tabindex="0" class="flex min-h-full items-end justify-center p-4 text-center focus:outline-none items-center sm:p-0">
+                <form class="relative z-50 transform overflow-hidden rounded-lg bg-account-card-bg text-left shadow-xl outline -outline-offset-1 outline-header-border transition-all sm:my-8 w-full sm:max-w-lg"
+                      th:action="@{transfer}" th:object="${transferRequestDto}" method="POST">
+                    <div class="bg-account-card-bg px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                        <div class="sm:flex sm:items-start">
+                            <div class="mx-auto flex size-12 shrink-0 items-center justify-center rounded-full bg-red-500/10 sm:mx-0 sm:size-10">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#121212" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6 text-green-700">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                                </svg>
+                            </div>
+
+                            <div class="mt-3 w-full text-center sm:mt-0 sm:ml-4 sm:text-left">
+                                <h3 id="dialog-title" class="text-base font-semibold text-white">이체하기</h3>
+
+                                <div class="mt-2">
+                                    <p class="text-sm text-gray-300"> 이체할 계좌번호와 금액을 입력하세요.
+                                    </p>
+                                </div>
+
+                                <div class="mt-6 space-y-4">
+
+                                    <div>
+                                        <label for="address" class="block text-sm font-medium leading-6 text-white">
+                                            계좌번호
+                                        </label>
+                                        <div class="mt-2">
+                                            <input type="text"
+                                                   name="address"
+                                                   id="address"
+                                                   th:field="*{address}"
+                                                   class="block w-full rounded-md border-0 bg-white/5 py-1.5 px-3 text-white shadow-sm
+                                      ring-1 ring-inset ring-white/10
+                                      placeholder:text-gray-400
+                                      focus:ring-2 focus:ring-inset focus:ring-blue-500
+                                      sm:text-sm sm:leading-6"
+                                                   placeholder="a1b2c3">
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label for="amount" class="block text-sm font-medium leading-6 text-white">
+                                            이체 금액 (원)
+                                        </label>
+                                        <div class="mt-2">
+                                            <input type="number"
+                                                   name="amount"
+                                                   id="amount"
+                                                   th:field="*{amount}"
+                                                   class="block w-full rounded-md border-0 bg-white/5 py-1.5 px-3 text-white shadow-sm
+                                      ring-1 ring-inset ring-white/10
+                                      placeholder:text-gray-400
+                                      focus:ring-2 focus:ring-inset focus:ring-blue-500
+                                      sm:text-sm sm:leading-6"
+                                                   placeholder="10000">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-container-bg px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                        <button type="submit" class="inline-flex w-full justify-center rounded-md bg-red-500 px-3 py-2 text-sm font-semibold text-white hover:bg-red-400 sm:ml-3 sm:w-auto">이체</button>
+                        <button type="button" class="dialog-close-btn mt-3 inline-flex w-full justify-center rounded-md bg-btn-translucent px-3 py-2 text-sm font-semibold text-active-nav-text inset-ring inset-ring-white/5 hover:bg-btn-translucent-hover sm:mt-0 sm:w-auto">닫기</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </body>
 <script th:inline="javascript">
-    // [수정된 코드]
-    // <script> 태그 안에 이것만 남겨두세요.
-
     async function handleLinkClick(e) {
-        // 클릭된 요소(e.currentTarget)에서 'data-url'을 가져옵니다.
         const url = this.dataset.url;
         console.log("Clicked URL:", url);
 
         if (!url) {
             return;
         }
-
-        // <span>이나 <div>는 기본 동작이 없지만,
-        // 만일을 위해 preventDefault를 호출할 수 있습니다. (필수는 아님)
-        // e.preventDefault();
 
         try {
             const response = await fetch(url);
@@ -61,23 +126,46 @@
         }
     }
 
-    // DOM이 로드된 후, 'body'에 이벤트 리스너를 위임합니다.
-    document.addEventListener("DOMContentLoaded", () => {
+    async function modalFloat(e){
+        console.log("Modal Float!");
+        openDialog();
+    }
 
-        // body 전체에 클릭 이벤트를 '한 번만' 등록
+    // 다이얼로그를 여는 함수
+    function openDialog() {
+        let dialogContainer = document.getElementById('dialog-container');
+        dialogContainer.classList.remove('hidden');
+    }
+
+    // 다이얼로그를 닫는 함수
+    function closeDialog() {
+        let dialogContainer = document.getElementById('dialog-container');
+        dialogContainer.classList.add('hidden');
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
         document.body.addEventListener('click', function(e) {
 
-            // 클릭된 지점(e.target)에서 가장 가까운 '.ajax-link' 조상을 찾습니다.
-            const clickedLink = e.target.closest('.ajax-link');
+            const clickedTarget = e.target.closest('.ajax-link, #dialogBtn, .dialog-close-btn, #dialog-backdrop');
 
-            // '.ajax-link'가 아니면(null) 무시합니다.
-            if (!clickedLink) {
+            if (!clickedTarget) {
                 return;
             }
 
-            // '.ajax-link'가 맞다면, handleLinkClick 함수를
-            // 'clickedLink'를 this(e.currentTarget)로 하여 호출합니다.
-            handleLinkClick.call(clickedLink, e);
+            if (clickedTarget.classList.contains("ajax-link")) {
+                handleLinkClick.call(clickedTarget, e);
+                return; // 작업 완료 후 종료
+            }
+
+            if (clickedTarget.id === 'dialogBtn') {
+                modalFloat.call(clickedTarget, e);
+                return; // 작업 완료 후 종료
+            }
+
+            if (clickedTarget.id === 'dialog-backdrop' || clickedTarget.classList.contains("dialog-close-btn")) {
+                closeDialog();
+                return;
+            }
         });
 
         console.log("AJAX listener (Event Delegation) is ready.");

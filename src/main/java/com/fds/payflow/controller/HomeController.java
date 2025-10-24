@@ -3,6 +3,7 @@ package com.fds.payflow.controller;
 import com.fds.payflow.constants.PageType;
 import com.fds.payflow.constants.SessionConst;
 import com.fds.payflow.dto.LoginFormDto;
+import com.fds.payflow.dto.TransferRequestDto;
 import com.fds.payflow.service.AccountService;
 import com.fds.payflow.service.MemberService;
 import jakarta.servlet.http.HttpSession;
@@ -29,11 +30,16 @@ public class HomeController {
     @GetMapping("/main")
     public String login(Model model, HttpSession session) {
         log.info("Login service called");
+        homeSetting(model, session, accountService);
+        return "mainpage";
+    }
+
+    public static void homeSetting(Model model, HttpSession session, AccountService service) {
         String userId = session.getAttribute(SessionConst.LOGIN_MEMBER_NAME.name()).toString();
-        model.addAttribute("accounts", accountService.findAddressesByMemberUserId(userId));
+        model.addAttribute("accounts", service.findAddressesByMemberUserId(userId));
         model.addAttribute("userId", userId);
         model.addAttribute("pageTitle", "내 계좌");
         model.addAttribute("pageType", PageType.MAIN.name());
-        return "mainpage";
+        model.addAttribute("transferRequestDto", new TransferRequestDto());
     }
 }
