@@ -21,7 +21,7 @@ public class FeedService {
     public void createFeedAfterTransfer(Transfer created){
         Member sender = accountRepository.findMemberByAccountNumber(created.getFromAccount());
         Member receiver = accountRepository.findMemberByAccountNumber(created.getToAccount());
-        String content = sender.getUserId() + " 님이 " + receiver.getUserId() + " 님에게 " + created.getAmount() + " 원을 송금하셨습니다 !!";
+        String content = sender.getUserId() + " 님이 " + receiver.getUserId() + " 님에게 " + created.getAmount() + " 원을 보냈습니다.";
         repository.save(new Feed("",content,created.getAmount(),"",created.getCreatedAt()));
     }
 
