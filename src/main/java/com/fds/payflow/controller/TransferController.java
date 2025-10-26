@@ -3,6 +3,7 @@ package com.fds.payflow.controller;
 import com.fds.payflow.constants.PageType;
 import com.fds.payflow.constants.SessionConst;
 import com.fds.payflow.dto.TransferRequestDto;
+import com.fds.payflow.exceptions.EquityAccountException;
 import com.fds.payflow.exceptions.NullAccountException;
 import com.fds.payflow.exceptions.OutOfBalanceException;
 import com.fds.payflow.service.AccountService;
@@ -56,6 +57,11 @@ public class TransferController {
                 model.addAttribute("globalErrors", br.getGlobalErrors());
                 HomeController.homeSetting(model, session, accountService);
                 log.warn("Null Account Exception = {}", e.getMessage());
+            } catch (EquityAccountException e){
+                br.reject(HttpStatus.BAD_REQUEST.name(), e.getMessage());
+                model.addAttribute("globalErrors", br.getGlobalErrors());
+                HomeController.homeSetting(model, session, accountService);
+                log.warn("Equity Account Exception = {}", e.getMessage());
             } catch (Exception e) {
                 log.warn(e.getMessage());
             }

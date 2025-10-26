@@ -5,10 +5,11 @@ import com.fds.payflow.constants.PageType;
 import com.fds.payflow.constants.SessionConst;
 import com.fds.payflow.dto.TransferRequestDto;
 import com.fds.payflow.service.AccountService;
+import com.fds.payflow.service.FeedService;
+import com.fds.payflow.vo.Feed;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,13 +28,16 @@ import java.util.Set;
 public class FragmentController {
     private final AccountService accountService;
     private final TemplateEngine templateEngine;
+    private final FeedService feedService;
 
     @GetMapping("/feed")
     public Map<String, String> getFeedFragment(Model model, HttpSession session) {
+        List<Feed> allFeed = feedService.getAllFeed();
         String userId = session.getAttribute(SessionConst.LOGIN_MEMBER_NAME.name()).toString();
         model.addAttribute("additionalText", PageType.FEED.name());
         model.addAttribute("type", PageType.FEED.name());
         model.addAttribute("userId", userId);
+        model.addAttribute("feeds",  allFeed);
 
         return getFragments(model, "fragments/feed", "feed");
     }
@@ -42,7 +46,7 @@ public class FragmentController {
     public Map<String, String> getMainFragment(Model model, HttpSession session) {
         String userId = session.getAttribute(SessionConst.LOGIN_MEMBER_NAME.name()).toString();
         model.addAttribute("accounts", accountService.findAddressesByMemberUserId(userId));
-        model.addAttribute("additionalText", PageType.MAIN.name());
+        model.addAttribute("additionalText", "내 계좌");
         model.addAttribute("type", PageType.MAIN.name());
         model.addAttribute("userId", userId);
         model.addAttribute("transferRequestDto", new TransferRequestDto());
