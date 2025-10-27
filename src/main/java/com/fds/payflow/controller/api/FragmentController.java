@@ -2,7 +2,6 @@ package com.fds.payflow.controller.api;
 
 
 import com.fds.payflow.constants.PageType;
-import com.fds.payflow.constants.SessionConst;
 import com.fds.payflow.dto.TransferRequestDto;
 import com.fds.payflow.service.AccountService;
 import com.fds.payflow.service.FeedService;
@@ -33,7 +32,9 @@ public class FragmentController {
     @GetMapping("/feed")
     public Map<String, String> getFeedFragment(Model model, HttpSession session) {
         List<Feed> allFeed = feedService.getAllFeed();
-        String userId = session.getAttribute(SessionConst.LOGIN_MEMBER_NAME.name()).toString();
+        // TODO : 세션 저장 4
+        // String userId = session.getAttribute(SessionConst.LOGIN_MEMBER_NAME.name()).toString();
+        String userId = "";
         model.addAttribute("additionalText", PageType.FEED.name());
         model.addAttribute("type", PageType.FEED.name());
         model.addAttribute("userId", userId);
@@ -44,7 +45,8 @@ public class FragmentController {
 
     @GetMapping("/main")
     public Map<String, String> getMainFragment(Model model, HttpSession session) {
-        String userId = session.getAttribute(SessionConst.LOGIN_MEMBER_NAME.name()).toString();
+        // String userId = session.getAttribute(SessionConst.LOGIN_MEMBER_NAME.name()).toString();
+        String userId = "";
         model.addAttribute("accounts", accountService.findAddressesByMemberUserId(userId));
         model.addAttribute("additionalText", "내 계좌");
         model.addAttribute("type", PageType.MAIN.name());
@@ -55,7 +57,8 @@ public class FragmentController {
 
     @GetMapping("/more")
     public Map<String, String> getMoreFragment(Model model, HttpSession session) {
-        String userId = session.getAttribute(SessionConst.LOGIN_MEMBER_NAME.name()).toString();
+        // String userId = session.getAttribute(SessionConst.LOGIN_MEMBER_NAME.name()).toString();
+        String userId = "";
         model.addAttribute("additionalText", PageType.MORE.name());
         model.addAttribute("type", PageType.MORE.name());
         model.addAttribute("userId", userId);
@@ -64,7 +67,8 @@ public class FragmentController {
 
     @GetMapping("/product")
     public Map<String, String> getProductFragment(Model model, HttpSession session) {
-        String userId = session.getAttribute(SessionConst.LOGIN_MEMBER_NAME.name()).toString();
+        // String userId = session.getAttribute(SessionConst.LOGIN_MEMBER_NAME.name()).toString();
+        String userId = "";
         model.addAttribute("additionalText", PageType.PRODUCT.name());
         model.addAttribute("type", PageType.PRODUCT.name());
         model.addAttribute("userId", userId);

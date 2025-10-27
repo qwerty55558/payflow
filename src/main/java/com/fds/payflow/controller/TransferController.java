@@ -1,13 +1,10 @@
 package com.fds.payflow.controller;
 
-import com.fds.payflow.constants.PageType;
-import com.fds.payflow.constants.SessionConst;
 import com.fds.payflow.dto.TransferRequestDto;
 import com.fds.payflow.exceptions.EquityAccountException;
 import com.fds.payflow.exceptions.NullAccountException;
 import com.fds.payflow.exceptions.OutOfBalanceException;
 import com.fds.payflow.service.AccountService;
-import com.fds.payflow.vo.Account;
 import com.fds.payflow.vo.Transfer;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -17,12 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -39,8 +32,8 @@ public class TransferController {
             HomeController.homeSetting(model, session, accountService);
             return "mainpage";
         }
-
-        List<Account> addressesByMemberUserId = accountService.findAddressesByMemberUserId(session.getAttribute(SessionConst.LOGIN_MEMBER_NAME.name()).toString());
+        // TODO : 세션 저장 3
+//        List<Account> addressesByMemberUserId = accountService.findAddressesByMemberUserId(session.getAttribute(SessionConst.LOGIN_MEMBER_NAME.name()).toString());
         if (!addressesByMemberUserId.isEmpty()){
             try {
                 Transfer transfer = accountService.transferFromAccount(addressesByMemberUserId.getFirst().getAccountNumber(), dto.getAddress(), dto.getAmount());
