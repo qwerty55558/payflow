@@ -1,6 +1,8 @@
 package com.fds.payflow.vo;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
@@ -22,12 +24,26 @@ public class Feed {
     private String img;
     private LocalDateTime recordTime;
 
-    public Feed(String content, String record, Long amount, String img, LocalDateTime recordTime) {
+    private String senderUserId;
+    @Enumerated(EnumType.STRING)
+    private Membership senderMembership;
+
+    private String receiverUserId;
+    @Enumerated(EnumType.STRING)
+    private Membership receiverMembership;
+
+    public Feed(String content, String record, Long amount, String img, LocalDateTime recordTime,
+                String senderUserId, Membership senderMembership,
+                String receiverUserId, Membership receiverMembership) {
         this.content = content;
         this.record = record;
         this.amount = amount;
         this.img = img;
         this.recordTime = recordTime;
+        this.senderUserId = senderUserId;
+        this.senderMembership = senderMembership;
+        this.receiverUserId = receiverUserId;
+        this.receiverMembership = receiverMembership;
     }
 
     @Override
@@ -39,6 +55,10 @@ public class Feed {
                 ", amount=" + amount +
                 ", img='" + img + '\'' +
                 ", recordTime=" + recordTime +
+                ", senderUserId='" + senderUserId + '\'' +
+                ", senderMembership=" + senderMembership +
+                ", receiverUserId='" + receiverUserId + '\'' +
+                ", receiverMembership=" + receiverMembership +
                 '}';
     }
 }

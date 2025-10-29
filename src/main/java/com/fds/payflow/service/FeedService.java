@@ -23,7 +23,18 @@ public class FeedService {
         Member sender = accountRepository.findMemberByAccountNumber(created.getFromAccount());
         Member receiver = accountRepository.findMemberByAccountNumber(created.getToAccount());
         String content = sender.getUserId() + " 님이 " + receiver.getUserId() + " 님에게 " + created.getAmount() + " 원을 보냈습니다.";
-        repository.save(new Feed("",content,created.getAmount(),"",created.getCreatedAt()));
+
+        repository.save(new Feed(
+                "",
+                content,
+                created.getAmount(),
+                "",
+                created.getCreatedAt(),
+                sender.getUserId(),
+                sender.getMembership(),
+                receiver.getUserId(),
+                receiver.getMembership()
+        ));
     }
 
     @Transactional(readOnly = true)

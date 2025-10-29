@@ -6,7 +6,9 @@ import com.fds.payflow.constants.SessionConst;
 import com.fds.payflow.dto.TransferRequestDto;
 import com.fds.payflow.service.AccountService;
 import com.fds.payflow.service.FeedService;
+import com.fds.payflow.service.MemberService;
 import com.fds.payflow.vo.Feed;
+import com.fds.payflow.vo.Member;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +31,7 @@ public class FragmentController {
     private final AccountService accountService;
     private final TemplateEngine templateEngine;
     private final FeedService feedService;
+    private final MemberService memberService;
 
     @GetMapping("/feed")
     public Map<String, String> getFeedFragment(Model model, HttpSession session) {
@@ -65,9 +68,23 @@ public class FragmentController {
     @GetMapping("/product")
     public Map<String, String> getProductFragment(Model model, HttpSession session) {
         String userId = session.getAttribute(SessionConst.LOGIN_MEMBER_NAME.name()).toString();
+
+        // 현재 사용자의 멤버십 정보 가져오기
+        Member member = memberService.findMemberByMemberId(userId);
+
         model.addAttribute("additionalText", PageType.PRODUCT.name());
         model.addAttribute("type", PageType.PRODUCT.name());
         model.addAttribute("userId", userId);
+        model.addAttribute("currentMembership", member.getMembership());
+
+        // Flash attributes가 있다면 model에 추가 (redirect 후 메시지 표시용)
+        if (model.containsAttribute("successMessage")) {
+            model.addAttribute("successMessage", model.getAttribute("successMessage"));
+        }
+        if (model.containsAttribute("errorMessage")) {
+            model.addAttribute("errorMessage", model.getAttribute("errorMessage"));
+        }
+
         return getFragments(model, "fragments/product", "product");
     }
 

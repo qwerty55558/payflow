@@ -68,4 +68,8 @@ public class Member {
             Collections.addAll(this.accounts, paramAccounts);
         }
     }
+
+    public void upgradeMembership(Membership newMembership) {
+        this.membership = newMembership;
+    }
 }

@@ -31,6 +31,7 @@ public class HomeController {
     public String login(Model model, HttpSession session) {
         log.info("Login service called");
         homeSetting(model, session, accountService);
+        // Flash attributes가 전달되면 자동으로 model에 포함됨
         return "mainpage";
     }
 

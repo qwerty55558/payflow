@@ -1,22 +1,63 @@
 <th:block th:fragment="product">
-    <div class="flex items-center space-x-4 m-3">
-                <span class="flex-shrink-0 px-6 py-2 rounded-full font-semibold bg-plan-basic text-plan-basic-text">
-                    Basic
-                </span>
-        <p class="text-gray-700">모든 기능을 누릴 수 있습니다.</p>
+    <div th:if="${successMessage}" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+        <p th:text="${successMessage}"></p>
     </div>
 
-    <div class="flex items-center space-x-4 m-3">
-                <span class="flex-shrink-0 px-6 py-2 rounded-full font-semibold bg-plan-pro text-white">
-                    Pro
-                </span>
-        <p class="text-gray-700">모든 기능 + 이름 강조 효과</p>
+    <div th:if="${errorMessage}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <p th:text="${errorMessage}"></p>
     </div>
 
-    <div class="flex items-center space-x-4 m-3">
-                <span class="flex-shrink-0 px-6 py-2 rounded-full font-semibold bg-plan-elite text-white">
-                    Elite
-                </span>
-        <p class="text-gray-700">Pro의 모든 기능 + 강조 이모지</p>
+    <div class="flex items-center justify-between m-3 p-4 bg-white rounded-lg shadow">
+        <div class="flex items-center space-x-4">
+            <span class="flex-shrink-0 px-6 py-2 rounded-full font-semibold bg-plan-basic text-plan-basic-text">
+                Basic
+            </span>
+            <p class="text-gray-700">모든 기능을 누릴 수 있습니다.</p>
+        </div>
+        <span class="text-gray-500 font-semibold" th:if="${currentMembership.name() == 'BASIC'}">현재 등급</span>
+        <span class="text-gray-500 font-semibold" th:unless="${currentMembership.name() == 'BASIC'}">무료</span>
+    </div>
+
+    <div class="flex items-center justify-between m-3 p-4 bg-white rounded-lg shadow">
+        <div class="flex items-center space-x-4">
+            <span class="flex-shrink-0 px-6 py-2 rounded-full font-semibold bg-plan-pro text-white">
+                Pro
+            </span>
+            <p class="text-gray-700">모든 기능 + 이름 강조 효과</p>
+        </div>
+
+        <!-- BASIC일 때만 구매 버튼 표시 -->
+        <form th:if="${currentMembership.name() == 'BASIC'}" action="/membership/upgrade" method="post" class="inline">
+            <input type="hidden" name="membership" value="PREMIUM">
+            <button type="submit" class="px-4 py-2 bg-plan-pro text-white rounded-lg font-semibold hover:opacity-90 transition">
+                5,000원 구매
+            </button>
+        </form>
+
+        <!-- PREMIUM일 때 현재 등급 표시 -->
+        <span th:if="${currentMembership.name() == 'PREMIUM'}" class="text-plan-pro font-semibold">현재 등급</span>
+
+        <!-- ELITE일 때 -->
+        <span th:if="${currentMembership.name() == 'ELITE'}" class="text-gray-500 font-semibold">보유 중</span>
+    </div>
+
+    <div class="flex items-center justify-between m-3 p-4 bg-white rounded-lg shadow">
+        <div class="flex items-center space-x-4">
+            <span class="flex-shrink-0 px-6 py-2 rounded-full font-semibold bg-plan-elite text-white">
+                Elite
+            </span>
+            <p class="text-gray-700">Pro의 모든 기능 + 강조 이모지</p>
+        </div>
+
+        <!-- BASIC이거나 PREMIUM일 때만 구매 버튼 표시 -->
+        <form th:if="${currentMembership.name() == 'BASIC' or currentMembership.name() == 'PREMIUM'}" action="/membership/upgrade" method="post" class="inline">
+            <input type="hidden" name="membership" value="ELITE">
+            <button type="submit" class="px-4 py-2 bg-plan-elite text-white rounded-lg font-semibold hover:opacity-90 transition">
+                10,000원 구매
+            </button>
+        </form>
+
+        <!-- ELITE일 때 현재 등급 표시 -->
+        <span th:if="${currentMembership.name() == 'ELITE'}" class="text-plan-elite font-semibold">현재 등급</span>
     </div>
 </th:block>
