@@ -12,7 +12,8 @@ public class LoginFormDto {
     @NotBlank
     private String userId;
     @NotBlank
-    @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$", message = "비밀번호는 8-15 자여야 하며 영문, 숫자, 특수문자를 최소 1 개씩 포함해야 합니다.")
+//    @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$", message = "비밀번호는 8-15 자여야 하며 영문, 숫자, 특수문자를 최소 1 개씩 포함해야 합니다.")
+    @Pattern(regexp = "^.{0,4}$", message = "비밀번호는 0-4 자여야합니다.")
     private String password;
 
     @Override

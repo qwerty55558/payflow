@@ -1,21 +1,21 @@
 [
   {
     "userId" : "user001",
-    "password" : "qwerty123$"
+    "password" : "1234"
   },{
     "userId" : "user002",
-    "password" : "qwerty123$"
+    "password" : "1234"
   },{
     "userId" : "user003",
-    "password" : "qwerty123$"
+    "password" : "1234"
   },{
     "userId" : "user004",
-    "password" : "qwerty123$"
+    "password" : "1234"
   },{
     "userId" : "user005",
-    "password" : "qwerty123$"
+    "password" : "1234"
   },{
     "userId" : "user006",
-    "password" : "qwerty123$"
+    "password" : "1234"
   }
 ]
