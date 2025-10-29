@@ -13,6 +13,9 @@ import java.util.UUID;
 @Slf4j
 public class AccountFactory {
     public Account createAccount(Member member){
+        if (member.getUserId().equals("user001")){
+            return new Account("aaabbb", member.getUserId() + "의 통장", 100000L, member);
+        }
         return new Account(generateAccountNumber(), member.getUserId() + "의 통장", 100000L, member);
     }
 

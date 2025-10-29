@@ -6,6 +6,7 @@ import com.fds.payflow.vo.Feed;
 import com.fds.payflow.vo.Member;
 import com.fds.payflow.vo.Transfer;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +28,6 @@ public class FeedService {
 
     @Transactional(readOnly = true)
     public List<Feed> getAllFeed(){
-        return repository.findAll();
+        return repository.findAllByOrderByRecordTimeDesc();
     }
 }
