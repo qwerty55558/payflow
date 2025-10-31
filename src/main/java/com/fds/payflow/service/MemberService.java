@@ -5,17 +5,23 @@ import com.fds.payflow.vo.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
 
     public Member findMemberByMemberId(String memberId){
-        return memberRepository.findByUserId(memberId).getFirst();
+        return memberRepository.findAllByUserId(memberId).getFirst();
     }
 
     public Member findMemberByMemberIdAndFetching(String memberId){
         return memberRepository.findByUserIdFetching(memberId);
+    }
+
+    public Optional<Member> findMemberById(Long id) {
+        return memberRepository.findById(id);
     }
 
 }

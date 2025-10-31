@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,7 +18,6 @@ public class Member {
     private Long id;
 
     private String userId;
-
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -29,22 +26,22 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)
     private List<Account> accounts;
 
-    public static class Builder{
+    public static class builder {
         String userId;
         String password;
-        private Membership membership = Membership.BASIC;
+        Membership membership = Membership.BASIC;
 
-        public Builder userId(String userId){
+        public builder userId(String userId){
             this.userId = userId;
             return this;
         }
 
-        public Builder password(String password){
+        public builder password(String password){
             this.password = password;
             return this;
         }
 
-        public Builder membership(Membership membership) {
+        public builder membership(Membership membership) {
             this.membership = membership;
             return this;
         }
@@ -54,7 +51,7 @@ public class Member {
         }
     }
 
-    private Member(Builder builder){
+    private Member(builder builder){
         this.userId = builder.userId;
         this.password = builder.password;
         this.membership = builder.membership;

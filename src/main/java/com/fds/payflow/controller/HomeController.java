@@ -5,12 +5,18 @@ import com.fds.payflow.dto.LoginFormDto;
 import com.fds.payflow.dto.TransferRequestDto;
 import com.fds.payflow.service.AccountService;
 import com.fds.payflow.service.MemberService;
+import com.fds.payflow.vo.Member;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import java.security.Principal;
 
 @Controller
 @Slf4j
@@ -27,17 +33,15 @@ public class HomeController {
 
 
     @GetMapping("/main")
-    public String login(Model model, HttpSession session) {
+    public String login(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         log.info("Login service called");
-        homeSetting(model, session, accountService);
+        homeSetting(model, accountService,userDetails.getUsername());
         return "mainpage";
     }
 
-    public static void homeSetting(Model model, HttpSession session, AccountService service) {
-        // TODO : 세션 저장 2
-        // String userId = session.getAttribute(SessionConst.LOGIN_MEMBER_NAME.name()).toString();
-        model.addAttribute("accounts", service.findAddressesByMemberUserId(userId));
-        model.addAttribute("userId", userId);
+    public static void homeSetting(Model model, AccountService service, String username) {
+        model.addAttribute("accounts", service.findAddressesByMemberUserId(username));
+        model.addAttribute("userId", username);
         model.addAttribute("pageTitle", "내 계좌");
         model.addAttribute("pageType", PageType.MAIN.name());
         model.addAttribute("transferRequestDto", new TransferRequestDto());

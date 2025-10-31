@@ -14,11 +14,6 @@ public class PayflowApplication {
 	}
 
     @Bean
-    public SimpleEncoder simpleEncoder(){
-        return new SimpleEncoder();
-    }
-
-    @Bean
     public AccountFactory accountFactory(){
         return new AccountFactory();
     }
