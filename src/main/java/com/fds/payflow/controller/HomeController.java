@@ -5,6 +5,7 @@ import com.fds.payflow.dto.LoginFormDto;
 import com.fds.payflow.dto.TransferRequestDto;
 import com.fds.payflow.service.AccountService;
 import com.fds.payflow.service.MemberService;
+import com.fds.payflow.vo.AuthUser;
 import com.fds.payflow.vo.Member;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,6 @@ import java.security.Principal;
 @Slf4j
 @RequiredArgsConstructor
 public class HomeController {
-    private final MemberService memberService;
     private final AccountService accountService;
 
     @GetMapping("/" )
@@ -33,9 +33,9 @@ public class HomeController {
 
 
     @GetMapping("/main")
-    public String login(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+    public String login(Model model, @AuthenticationPrincipal AuthUser user) {
         log.info("Login service called");
-        homeSetting(model, accountService,userDetails.getUsername());
+        homeSetting(model, accountService,user.getUsername());
         return "mainpage";
     }
 

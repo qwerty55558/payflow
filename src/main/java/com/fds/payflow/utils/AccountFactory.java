@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
-@Component
 @Slf4j
 public class AccountFactory {
     public Account createAccount(Member member){

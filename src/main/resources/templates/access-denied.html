@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PayFlow - 접근 거부</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'app-bg': '#2c2c2e',        // body 배경색
+                        'container-bg': '#f2f2f7',  // 컨테이너 내부 배경색
+                        'account-card-bg': '#8bc34a', // 주조색 (로고, 버튼)
+                        'bank-logo-text': '#8bc34a',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-app-bg flex justify-center items-center min-h-screen p-4">
+
+<div class="container bg-container-bg rounded-3xl shadow-xl w-full max-w-sm p-8 sm:p-10">
+
+    <div class="text-center text-red-500 mb-4">
+        <i class="fas fa-ban fa-3x"></i>
+    </div>
+    <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">접근이 거부되었습니다</h2>
+
+    <p class="text-center text-gray-600 mb-8">
+        이 페이지에 접근할 수 있는 <strong>권한</strong>이 없습니다. <br>
+        관리자에게 <strong>문의</strong>하거나, 이전 페이지로 돌아가세요.
+    </p>
+
+    <a
+            th:href="@{/}"
+            class="w-full block text-center bg-account-card-bg text-white font-bold py-3 px-4 rounded-lg hover:opacity-90 transition-opacity duration-200 shadow-md"
+    >
+        메인 페이지로 이동
+    </a>
+
+    <div class="text-center mt-6">
+        <a th:href="@{/logout}" class="text-sm text-gray-500 hover:underline">로그아웃</a>
+    </div>
+</div>
+
+</body>
+</html>

@@ -8,13 +8,7 @@ import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class PayflowApplication {
-
 	public static void main(String[] args) {
         SpringApplication.run(PayflowApplication.class, args);
 	}
-
-    @Bean
-    public AccountFactory accountFactory(){
-        return new AccountFactory();
-    }
 }

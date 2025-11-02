@@ -14,13 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class AuthService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder encoder;
     private final AccountFactory accountFactory;
-    private final AccountRepository accountRepository;
 
-    @Transactional
     public Member createMember(String userId, String password){
         if (!memberRepository.existsByUserId(userId)) {
 
@@ -34,16 +33,13 @@ public class AuthService {
 
             return memberRepository.save(build);
         }else {
-            if (login(userId, password)) {
-                return memberRepository.findAllByUserId(userId).stream().findAny().orElseThrow();
-            } else {
-                return null;
-            }
+            return null;
         }
     }
 
+    @Transactional(readOnly = true)
     public boolean login(String userId, String password){
-        Member member = memberRepository.findAllByUserId(userId).stream().findAny().orElseThrow();
+        Member member = memberRepository.findMemberByUserId(userId).orElseThrow(IllegalArgumentException::new);
         return encoder.matches(password, member.getPassword());
     }
 }

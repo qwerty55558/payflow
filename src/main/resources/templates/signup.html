@@ -4,12 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PayFlow - 회원가입</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script>
-        // Tailwind Custom Theme Configuration
         tailwind.config = {
             theme: {
                 extend: {
@@ -26,33 +23,22 @@
 </head>
 <body class="bg-app-bg flex justify-center items-center min-h-screen p-4">
 
-<!-- Main container -->
 <div class="container bg-container-bg rounded-3xl shadow-xl w-full max-w-sm p-8 sm:p-10">
 
-    <!-- Logo -->
     <div class="mx-auto w-28 h-28 bg-account-card-bg rounded-full flex justify-center items-center mb-8 shadow-lg">
         <span class="text-6xl font-bold text-white">F</span>
     </div>
 
-    <!-- Title -->
     <h2 class="text-2xl font-bold text-center text-gray-800 mb-8">회원가입</h2>
 
-    <!-- Sign-up Form -->
-    <!--
-      TODO:
-      1. th:action="@{/signup}"으로 수정
-      2. th:object="${signupFormDto}"와 같이 회원가입 DTO에 맞게 수정
-    -->
     <form method="POST" th:action="@{/signup}" th:object="${signFormDto}">
 
-        <!-- Global Errors -->
         <div th:if="${#fields.hasGlobalErrors()}" class="mb-4 p-3 bg-red-100 border border-red-300 text-red-700 rounded">
             <p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
         </div>
 
         <div class="space-y-4">
 
-            <!-- User ID Field -->
             <div class="relative">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-3">
                     <i class="fas fa-user text-gray-400"></i>
@@ -65,13 +51,11 @@
                         th:classappend="${#fields.hasErrors('userId')} ? 'border-red-300 focus:border-red-300 focus:ring-red-300' : 'border-gray-300 focus:border-blue-300 focus:ring-blue-300'"
                 >
             </div>
-            <!-- User ID Error -->
             <div th:if="${#fields.hasErrors('userId')}"
                  th:errors="*{userId}"
                  class="mt-1 text-sm text-red-300"
             ></div>
 
-            <!-- Password Field -->
             <div class="relative">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-3">
                     <i class="fas fa-lock text-gray-400"></i>
@@ -84,13 +68,11 @@
                         th:classappend="${#fields.hasErrors('password')} ? 'border-red-300 focus:border-red-300 focus:ring-red-300' : 'border-gray-300 focus:border-blue-300 focus:ring-blue-300'"
                 >
             </div>
-            <!-- Password Error -->
             <div th:if="${#fields.hasErrors('password')}"
                  th:errors="*{password}"
                  class="mt-1 text-sm text-red-300"
             ></div>
 
-            <!-- Password Confirmation Field -->
             <div class="relative">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-3">
                     <i class="fas fa-check-circle text-gray-400"></i>
@@ -103,7 +85,6 @@
                         th:classappend="${#fields.hasErrors('passwordConfirm')} ? 'border-red-300 focus:border-red-300 focus:ring-red-300' : 'border-gray-300 focus:border-blue-300 focus:ring-blue-300'"
                 >
             </div>
-            <!-- Password Confirmation Error -->
             <div th:if="${#fields.hasErrors('passwordConfirm')}"
                  th:errors="*{passwordConfirm}"
                  class="mt-1 text-sm text-red-300"
@@ -111,7 +92,6 @@
 
         </div>
 
-        <!-- Submit Button -->
         <button
                 type="submit"
                 class="w-full bg-account-card-bg text-white font-bold py-3 px-4 rounded-lg mt-8 hover:opacity-90 transition-opacity duration-200 shadow-md"
@@ -120,7 +100,6 @@
         </button>
     </form>
 
-    <!-- Bottom Link to Login -->
     <div class="text-center mt-6">
         <span class="text-sm text-gray-500">이미 계정이 있으신가요?</span>
         <a href="#" th:href="@{/login}" class="text-sm text-account-card-bg hover:underline font-semibold ml-1">

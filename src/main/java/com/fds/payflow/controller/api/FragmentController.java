@@ -5,10 +5,12 @@ import com.fds.payflow.constants.PageType;
 import com.fds.payflow.dto.TransferRequestDto;
 import com.fds.payflow.service.AccountService;
 import com.fds.payflow.service.FeedService;
+import com.fds.payflow.vo.AuthUser;
 import com.fds.payflow.vo.Feed;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,48 +32,44 @@ public class FragmentController {
     private final FeedService feedService;
 
     @GetMapping("/feed")
-    public Map<String, String> getFeedFragment(Model model, HttpSession session) {
-        List<Feed> allFeed = feedService.getAllFeed();
-        // TODO : 세션 저장 4
-        // String userId = session.getAttribute(SessionConst.LOGIN_MEMBER_NAME.name()).toString();
-        String userId = "";
-        model.addAttribute("additionalText", PageType.FEED.name());
-        model.addAttribute("type", PageType.FEED.name());
-        model.addAttribute("userId", userId);
-        model.addAttribute("feeds",  allFeed);
+    public Map<String, String> getFeedFragment(Model model) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        AuthUser authUser;
+        if (principal instanceof AuthUser) {
+            authUser = (AuthUser) principal;
+            List<Feed> allFeed = feedService.getAllFeed();
+            model.addAttribute("additionalText", PageType.FEED.name());
+            model.addAttribute("type", PageType.FEED.name());
+            model.addAttribute("userId", authUser.getUsername());
+            model.addAttribute("feeds",  allFeed);
+        }
 
         return getFragments(model, "fragments/feed", "feed");
     }
 
     @GetMapping("/main")
-    public Map<String, String> getMainFragment(Model model, HttpSession session) {
-        // String userId = session.getAttribute(SessionConst.LOGIN_MEMBER_NAME.name()).toString();
-        String userId = "";
-        model.addAttribute("accounts", accountService.findAddressesByMemberUserId(userId));
+    public Map<String, String> getMainFragment(Model model, @AuthenticationPrincipal AuthUser authUser) {
+        model.addAttribute("accounts", accountService.findAddressesByMemberUserId(authUser.getUsername()));
         model.addAttribute("additionalText", "내 계좌");
         model.addAttribute("type", PageType.MAIN.name());
-        model.addAttribute("userId", userId);
+        model.addAttribute("userId", authUser.getUsername());
         model.addAttribute("transferRequestDto", new TransferRequestDto());
         return getFragments(model, "fragments/main", "main");
     }
 
     @GetMapping("/more")
-    public Map<String, String> getMoreFragment(Model model, HttpSession session) {
-        // String userId = session.getAttribute(SessionConst.LOGIN_MEMBER_NAME.name()).toString();
-        String userId = "";
+    public Map<String, String> getMoreFragment(Model model, @AuthenticationPrincipal AuthUser authUser) {
         model.addAttribute("additionalText", PageType.MORE.name());
         model.addAttribute("type", PageType.MORE.name());
-        model.addAttribute("userId", userId);
+        model.addAttribute("userId", authUser.getUsername());
         return getFragments(model, "fragments/more", "more");
     }
 
     @GetMapping("/product")
-    public Map<String, String> getProductFragment(Model model, HttpSession session) {
-        // String userId = session.getAttribute(SessionConst.LOGIN_MEMBER_NAME.name()).toString();
-        String userId = "";
+    public Map<String, String> getProductFragment(Model model, @AuthenticationPrincipal AuthUser authUser) {
         model.addAttribute("additionalText", PageType.PRODUCT.name());
         model.addAttribute("type", PageType.PRODUCT.name());
-        model.addAttribute("userId", userId);
+        model.addAttribute("userId", authUser.getUsername());
         return getFragments(model, "fragments/product", "product");
     }
 
