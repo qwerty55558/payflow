@@ -31,6 +31,10 @@ public class AccountService {
             throw new OutOfBalanceException("잔액이 부족합니다.");
         }
 
+        if (amount <= 0) {
+            throw new OutOfBalanceException("송금액은 0원보다 커야 합니다.");
+        }
+
         fromAccount.withdraw(amount);
 
         Account toAccount = accountRepository.findAccountByAccountNumber(toAccountNum);
