@@ -12,6 +12,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -31,7 +32,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         return http
-                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(session -> {
+                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                })
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers(
                                     "/login",
@@ -41,7 +44,9 @@ public class SecurityConfig {
                             ).permitAll()
                             .anyRequest().authenticated();
                 })
+                .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
                 .logout(logout -> {
                     logout
                             .logoutSuccessUrl("/")
@@ -64,10 +69,8 @@ public class SecurityConfig {
         try {
             DaoAuthenticationProvider daoProvider = new DaoAuthenticationProvider(service);
             daoProvider.setPasswordEncoder(encoder);
-            ProviderManager providerManager = new ProviderManager(List.of(daoProvider));
-            providerManager.setEraseCredentialsAfterAuthentication(false);
 
-            return providerManager;
+            return new ProviderManager(List.of(daoProvider));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

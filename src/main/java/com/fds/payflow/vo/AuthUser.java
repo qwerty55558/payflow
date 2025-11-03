@@ -18,9 +18,9 @@ import java.util.function.Function;
 
 public class AuthUser extends User {
     @Getter
-    private Long userId;
+    private final Long userId;
 
-    public AuthUser(String username, String encodedPassword, boolean b, boolean b1, boolean b2, boolean b3, List<GrantedAuthority> authorities, Long userId) {
+    public AuthUser(String username, String encodedPassword, boolean b, boolean b1, boolean b2, boolean b3, Collection<? extends GrantedAuthority> authorities, Long userId) {
         super(username, encodedPassword, b, b1, b2, b3, authorities);
         this.userId = userId;
     }

@@ -4,8 +4,11 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,6 +24,7 @@ public class Member {
     private String password;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Membership membership;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)
@@ -64,5 +68,9 @@ public class Member {
         }else{
             Collections.addAll(this.accounts, paramAccounts);
         }
+    }
+
+    public Collection<GrantedAuthority> getAuthorities(){
+        return Collections.singletonList(new SimpleGrantedAuthority(membership.toString()));
     }
 }

@@ -1,28 +1,24 @@
 package com.fds.payflow.service.token;
 
 import com.fds.payflow.config.JwtProperties;
-import com.fds.payflow.vo.Member;
+import com.fds.payflow.vo.AuthUser;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtParser;
-import io.jsonwebtoken.JwtParserBuilder;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
-import java.security.Key;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class TokenProviderService {
@@ -35,20 +31,34 @@ public class TokenProviderService {
     }
 
     @Value("${acc-token.duration}")
-    private Duration duration;
+    private Duration atDuration;
 
-    public String genToken(Member member) {
-        Instant exp = Instant.now().plus(duration);
-        return makeToken(Date.from(exp), member);
+    @Value("${ref-token.duration}")
+    private Duration rtDuration;
+
+    public String genRefreshToken(AuthUser user){
+        Instant exp = Instant.now().plus(rtDuration);
+        return makeToken(Date.from(exp), user, "RT");
     }
 
-    public String makeToken(Date expiry, Member user) {
+    public String genAccessToken(AuthUser user) {
+        Instant exp = Instant.now().plus(atDuration);
+        return makeToken(Date.from(exp), user, "AT");
+    }
+
+    public String makeToken(Date expiry, AuthUser user, String tokenType) {
+        String authorities = user.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
         return Jwts.builder()
                 .issuer(properties.getIssuer())
                 .issuedAt(Date.from(Instant.now()))
                 .expiration(Date.from(expiry.toInstant()))
-                .subject(user.getUserId())
-                .claim("id", user.getId())
+                .subject(user.getUsername())
+                .claim("id", user.getUserId())
+                .claim("type", tokenType)
+                .claim("auth", authorities)
                 .signWith(secretKey)
                 .compact();
     }
@@ -67,14 +77,27 @@ public class TokenProviderService {
 
     public Authentication getAuthentication(String token){
         Claims claims = getClaims(token);
-        Set<SimpleGrantedAuthority> roleUser = Collections.singleton(
-                new SimpleGrantedAuthority("ROLE_USER")
-        );
+
+        if (!"AT".equals(claims.get("type", String.class))) {
+            throw new JwtException("Invalid token Type: 토큰에 액세스할 수가 없습니다.");
+        }
+
+        String authClaims = claims.get("auth", String.class);
+
+        Collection<? extends GrantedAuthority> authorities = extractAuth(authClaims);
+
         return new UsernamePasswordAuthenticationToken(
-                new User(claims.getSubject(), "", roleUser),
+                new AuthUser(claims.getSubject(), "", true, true, true, true, authorities, Long.parseLong(claims.getId())),
                 token,
-                roleUser
+                authorities
         );
+    }
+
+    private static Collection<? extends GrantedAuthority> extractAuth(String authClaims) {
+        return (authClaims == null || authClaims.isBlank()) ? Collections.emptyList() :
+        Arrays.stream(authClaims.split(","))
+                .map(SimpleGrantedAuthority::new)
+                .toList();
     }
 
     private Claims getClaims(String token){
@@ -83,6 +106,23 @@ public class TokenProviderService {
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
+    }
+
+    public String getATFromRT(String refreshToken){
+        if (!validToken(refreshToken)){
+            throw new JwtException("Invalid Token: 토큰이 유효하지 않습니다.");
+        }
+        Claims claims = getClaims(refreshToken);
+        if (!"RT".equals(claims.get("type", String.class))) {
+            throw new JwtException("Invalid token Type: 토큰에 액세스할 수가 없습니다.");
+        }
+
+        String userName = claims.getSubject();
+        Long userId = claims.get("id", Long.class);
+        String auth = claims.get("auth", String.class);
+
+        AuthUser authUser = new AuthUser(userName, "", true, true, true, true, extractAuth(auth), userId);
+        return genAccessToken(authUser);
     }
 
 }
